@@ -1,68 +1,84 @@
-// index.js
 import React from 'react'
 import ReactDOM from 'react-dom'
 import emmiImage from './images/emmi.jpg'
-// To get the root element from the HTML document
 
-// JSX element, header
-const welcome = 'Welcome to 30 Days Of React'
-const title = 'Getting Started React'
-const subtitle = 'JavaScript Library'
 const author = {
   firstName: 'Jan',
   lastName: 'Rehnert',
 }
-const date = '15 May 2015'
-
-// JSX element, header
-const Header = () => (
-  <header>
-    <div className='header-wrapper'>
-      <h1>{welcome}</h1>
-      <h2>{title}</h2>
-      <h3>{subtitle}</h3>
-      <p>
-        Instructor: {author.firstName} {author.lastName}
-      </p>
-      <small>Date: {date}</small>
-    </div>
-  </header>
-)
-
-const action = 'Test'
-
-const Button = () => <button className='buttonStyles'> {action} </button>
-
 const yearBorn = 1999
 const currentYear = new Date().getFullYear()
 const age = currentYear - yearBorn
-const personAge = (
-  <p>
-    {' '}
-    {author.firstName} {author.lastName} is {age} years old
-  </p>
-)
+
+const showDate = (time) => {
+  const months = [
+    'January', 
+    'February', 
+    'March', 
+    'April', 
+    'May', 
+    'June',
+    'July', 
+    'August', 
+    'September', 
+    'October',
+    'November', 
+    'December',
+  ]
+  const month = months[time.getMonth()].slice(0, 3)
+  const year = time.getFullYear()
+  const date = time.getDate()
+  return ` ${month} ${date}, ${year}`
+}
+
+// JSX element, header
+const Header = (props) => {
+  return (
+    <header>
+      <div className='header-wrapper'>
+        <h1>{props.welcome}</h1>
+        <h2>{props.title}</h2>
+        <h3>{props.subtitle}</h3>
+        <p>
+          {props.firstName} {props.lastName}
+        </p>
+        <small>{showDate(props.date)}</small>
+      </div>
+    </header>
+  )
+}
+
+const action = 'Action'
+const Button = (props) => {
+  return(
+    <button className='buttonStyles' onClick={props.onClick}>
+      {props.action}
+    </button>
+  )
+}
 
 // JSX element, main
-const techs = ['HTML', 'CSS', 'JavaScript']
-const techsFormatted = techs.map((tech) => <li>{tech}</li>)
-
-// JSX element, main
-const Main = () => (
-  <main>
-    <div className='main-wrapper'>
-      <p>
-        Prerequisite to get started{' '}
-        <strong>
-          <em>react.js</em>
-        </strong>
-        :
-      </p>
-      <ul>{techsFormatted}</ul>
-      {personAge}
-    </div>
-  </main>
-)
+const Main = (props) => {
+  const technologies = props.techs.map((tech) => 
+  <li>{tech}</li>)
+  return (  
+    <main>
+      <div className='main-wrapper'>
+        <p>
+          Prerequisite to get started{' '}
+          <strong>
+            <em>react.js</em>
+          </strong>
+          :
+        </p>
+        <ul>
+          {technologies}
+        </ul>
+        I am {age} years old.
+      </div>
+    </main>
+  )
+}
 
 const Emmi = () => (
   <div>
@@ -71,15 +87,42 @@ const Emmi = () => (
 )
 
 // JSX element, app
-const app = (
-  <div className='app'>
-    <Header />
-    <Button />
-    <Main />
-    <Emmi />
-  </div>
-)
+const App = () => {
+  const welcome = 'Welcome to 30 Days Of React'
+  const title = 'Getting Started React'
+  const subtitle = 'JavaScript Library'
+  const date = new Date()
+  const technologies = ['HTML', 'CSS', 'JavaScript']
+  const personAge = (
+    <p>
+      {' '}
+      {author.firstName} {author.lastName} is {age} years old
+    </p>
+  )
+
+  return (
+    <div className='app'>
+      <Header 
+        welcome={welcome}
+        title={title}
+        subtitle={subtitle}
+        firstName={author.firstName}
+        lastName={author.lastName}
+        date={date}
+      />
+      <Button 
+        action={action}
+        onClick={() => alert(new Date())}
+      />
+      <Main 
+        techs = {technologies}
+        age={personAge}
+      />
+      <Emmi />
+    </div>
+  )
+}
 
 const rootElement = document.getElementById('root')
 // we render the JSX element using the ReactDOM package
-ReactDOM.render(app, rootElement)
+ReactDOM.render(<App />, rootElement)
